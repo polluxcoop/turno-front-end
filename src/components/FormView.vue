@@ -80,6 +80,7 @@
 
 <script>
 export default {
+  name: "FormComponent",
   data() {
     return {
       name: "",

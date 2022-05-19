@@ -37,7 +37,7 @@
             <p id="date">{{ formattedDate }}</p>
           </div>
         </div>
-        <form-view @submitForm="handleSubmit" key="" />
+        <form-service @submitForm="handleSubmit" key="" />
       </div>
     </section>
     <!-- VISTA 3 -->
@@ -57,9 +57,9 @@
 
 <script>
 import SelectsView from "./components/SelectsView.vue";
-import FormView from "./components/FormView.vue";
-import moment from "moment";
 
+import moment from "moment";
+import FormService from "./services/FormService.vue";
 const AVAILABLE_SCHEDULES = [
   {
     label: "09:00 hs.",
@@ -103,7 +103,8 @@ export default {
   name: "App",
   components: {
     SelectsView,
-    FormView,
+
+    FormService,
   },
   data() {
     const date = new Date();
@@ -208,12 +209,25 @@ export default {
 .vc-header {
   padding: 10px 0;
 }
+.vc-title {
+  font-family: "Lexend Exa" !important;
+  font-weight: bolder !important;
+}
 
 .vc-weekday {
   color: rgb(63, 62, 62) !important;
+  font-family: "Lexend Exa" !important;
+  font-weight: bolder !important;
+}
+.vc-day-content {
+  font-family: "Lexend Exa" !important;
+  font-weight: bolder !important;
 }
 .vc-day-box-center-center {
   text-align: center !important;
+}
+.vc-svg-icon path {
+  color: rgb(63, 62, 62) !important;
 }
 body {
   overflow: hidden;
@@ -316,7 +330,7 @@ button:hover {
   font-weight: 400 bolder;
   text-align: center;
   color: #ffffff;
-  line-height: 40px;
+  line-height: 79px;
   background: rgba(72, 183, 185, 0.5);
   box-shadow: none;
   font-size: 20px !important;

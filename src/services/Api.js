@@ -1,12 +1,15 @@
-import axios from 'axios '
+import axios from 'axios';
 
 
 export default () => {
     return axios.create({
-        baseUrl: 'http://',
+        baseURL: 'https://jsonplaceholder.typicode.com',
         headers: {
             'Accept': 'application/json',
             'Content-type': 'application/json'
         }
     })
+
+
+
 }
