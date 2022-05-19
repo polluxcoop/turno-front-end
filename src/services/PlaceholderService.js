@@ -4,6 +4,6 @@ import Api from "./Api";
 
 export default {
     getPlaceholder() {
-        return Api().get('/?_limit=12')
+        return Api().get('/?_limit=4')
     }
 }

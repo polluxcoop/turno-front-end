@@ -3,7 +3,8 @@
     <h1>Placeholder</h1>
     <div
       style="
-        max-width: 600px;
+        width: 150px !important;
+
         margin: auto;
         display: flex;
         justify-content: center;
@@ -26,21 +27,21 @@
 import PlaceholderService from "@/services/PlaceholderService";
 
 export default {
-  name: "PlaceholderComponent",
   data() {
     return {
       placeholders: [],
     };
   },
-  mounted() {
-    this.getPlaceholders();
-  },
 
   methods: {
-    getPlaceholders() {
-      const response = PlaceholderService.getPlaceholders();
-      this.getPlaceholders = response.data;
+    async getPlaceholders() {
+      const response = await PlaceholderService.getPlaceholder();
+      this.placeholders = response.data;
+      //console.log(response);
     },
+  },
+  created() {
+    this.getPlaceholders();
   },
 };
 </script>

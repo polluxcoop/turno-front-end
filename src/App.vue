@@ -57,7 +57,6 @@
 
 <script>
 import SelectsView from "./components/SelectsView.vue";
-
 import moment from "moment";
 import FormService from "./services/FormService.vue";
 const AVAILABLE_SCHEDULES = [
@@ -103,7 +102,6 @@ export default {
   name: "App",
   components: {
     SelectsView,
-
     FormService,
   },
   data() {
@@ -267,7 +265,7 @@ section {
 #arrow,
 img {
   width: 480px;
-  height: 583px;
+  /*height: 583px;*/
 }
 
 /* DERECHA */
