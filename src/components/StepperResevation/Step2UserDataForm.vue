@@ -9,7 +9,7 @@
         <label for="name">Nombre y apellido:</label>
         <input
           type="text"
-          name="name"
+          name="client_name"
           id="name"
           v-model="name"
           @blur="handleBlur"
@@ -22,7 +22,7 @@
         <label for="email">E-mail:</label>
         <input
           type="email"
-          name="email"
+          name="client_email"
           id="email"
           v-model="email"
           @blur="handleBlur"
@@ -34,7 +34,7 @@
         <label for="phone">Teléfono:</label>
         <input
           type="text"
-          name="phone"
+          name="client_cell"
           id="phone"
           required
           v-model="phone"
@@ -47,7 +47,7 @@
         <label for="dni">DNI:</label>
         <input
           type="text"
-          name="dni"
+          name="client_dni"
           id="dni"
           required
           v-model="dni"
@@ -70,7 +70,7 @@
       </div>
 
       <div class="boton">
-        <button type="button" id="myButton" @click="submitForm">
+        <button type="button" id="myButton"  @next="$emit('next')">
           RESERVAR
         </button>
       </div>
@@ -79,8 +79,15 @@
 </template>
 
 <script>
+import { turnosServices } from "@/services/turnosServices";
+import moment from "moment";
+
 export default {
-  name: "FormComponent",
+  name: "Step2UserDataForm",
+  props: {
+    date: String,
+    time: String,
+  },
   data() {
     return {
       name: "",
@@ -97,16 +104,25 @@ export default {
   },
 
   methods: {
-    submitForm() {
+    async submitForm() {
       const validacion = this.validateForm();
       if (validacion) {
-        this.$emit("submitForm", {
-          name: this.name,
-          email: this.email,
-          phone: this.phone,
-          dni: this.dni,
+        const request = {
+          date: this.date,
+          time: this.time,
+          client_name: this.name,
+          client_email: this.email,
+          client_cell: this.phone,
+          client_dni: this.dni,
           message: this.message,
-        });
+          service_id: 1,
+          terminal_id: 1,
+          confirmed_at: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+        };
+        const response = await turnosServices.saveTurn(request);
+
+        this.$emit("next");
+        console.log(response);
       }
     },
     handleBlur() {
@@ -216,7 +232,7 @@ button {
   line-height: 28px;
   text-align: center;
   color: #ffffff;
-  margin-left: -84px;
+  margin-left: -7px;
 }
 
 button:hover {
@@ -236,7 +252,8 @@ p.error {
   padding: 4px 10px;
 }
 .col2 {
-  margin-left: -94px;
-  margin-right: 89px;
+ margin-left: 18px;
+    margin-right: 183px;
 }
 </style>
+

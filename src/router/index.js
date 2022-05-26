@@ -1,22 +1,20 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import HomeApp from '../views/HomeApp.vue';
-import FormView from '../components/FormView.vue';
+import MainPage from '../views/MainPage.vue';
+
+
 
 Vue.use(VueRouter);
 
 const routes = [
     {
-        path: '/',
-        name: 'HomeApp',
-        component: HomeApp
+       path: '/',
+       name: 'MainPage',
+       component: MainPage
 
-    },
-    {
-        path: '/form',
-        name: 'FormView',
-        component: FormView,
-    },
+   },
+   
+
     // {
     //   path: '/about',
     //   name: 'about',
