@@ -21,7 +21,7 @@
 <script>
 import BaseButton from "@/components/BaseButton";
 export default {
-  name: "Step1HoursAvailable",
+  name: "HoursAvailable",
   components: { BaseButton },
   props: {
     available: {

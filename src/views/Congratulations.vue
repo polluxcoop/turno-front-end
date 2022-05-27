@@ -9,21 +9,14 @@
 
 <script>
 export default {
-  name: "Step3Congratulations",
+  name: "congratulations-components",
 };
 </script>
 
 <style scoped>
-/* .container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  background: rgba(26, 87, 157, 0.5);
-  margin-right: 246px;
-  margin-left: 246px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 8px; 
-} */
-
+section {
+  display: flex;
+}
 .title {
   width: 335px;
   height: 59px;

@@ -1,7 +1,7 @@
 <template>
   <div class="col1">
     <div id="datos">
-      <img id="arrow" src=../../assets/Arrow.svg alt="arrow"
+      <img id="arrow" src=../../../assets/Arrow.svg alt="arrow"
       @click="$emit('back')" />
 
       <h1 id="dato">Datos de la reserva:</h1>
@@ -9,25 +9,21 @@
       <p id="date">{{ formattedDate }}</p>
     </div>
 
-    <Step2UserDataForm
-      :time="time"
-      :date="formattedDate"
-      @next="$emit('next')"
-    />
+    <UserDataForm :time="time" :date="formattedDate" @next="$emit('next')" />
   </div>
 </template>
 
 <script>
-import Step2UserDataForm from "@/components/StepperResevation/Step2UserDataForm";
+import UserDataForm from "@/components/StepperReservation/Step2/UserDataForm";
 
 export default {
-  name: "Step2UserData",
+  name: "UserData",
   props: {
     time: String,
     formattedDate: String,
   },
   components: {
-    Step2UserDataForm,
+    UserDataForm,
   },
 };
 </script>

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import MainPage from '../views/MainPage.vue';
-
+import Congratulations from '../views/Congratulations.vue';
 
 
 Vue.use(VueRouter);
@@ -13,6 +13,13 @@ const routes = [
        component: MainPage
 
    },
+   {
+    path: '/congratulations',
+    name: 'Congratulations',
+    component:Congratulations
+
+},
+
    
 
     // {

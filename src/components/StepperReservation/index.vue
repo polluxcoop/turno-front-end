@@ -1,10 +1,11 @@
 <template>
   <div class="container">
     <section style="display: flex" v-if="step === 1">
-      <Step1CalendarComponent v-model="selectedDate" @onDayClick="onDayClick" />
-      <Step1HoursAvailable
+      <CalendarComponent v-model="selectedDate" @onDayClick="onDayClick" />
+      <HoursAvailable
         :available="available"
-        v-if="available.length > 0"
+        v-if="available.length > 1"
+
         @next="next"
         @submitForm="handleSubmit"
       />
@@ -21,8 +22,8 @@
       {{ errorMessage }}
     </div> -->
 
-    <section v-if="step === 2">
-      <Step2UserData
+    <section style="display: flex" v-if="step === 2">
+      <UserData
         :time="time"
         :formatted-date="formattedDate"
         @back="back"
@@ -30,27 +31,27 @@
       />
     </section>
 
-    <section v-if="step === 3">
-      <Step3Congratulations />
+    <section style="display: flex" v-if="step === 3">
+      <Congratulations />
     </section>
   </div>
 </template>
 
 <script>
 import moment from "moment";
-import Step1CalendarComponent from "./Step1CalendarComponent";
-import Step1HoursAvailable from "./Step1HoursAvailable";
-import Step2UserData from "@/components/StepperResevation/Step2UserData";
+import CalendarComponent from "./Step1/CalendarComponent";
+import HoursAvailable from "./Step1/HoursAvailable";
+import UserData from "@/components/StepperReservation/Step2/UserData";
 import { turnosServices } from "@/services/turnosServices";
-import Step3Congratulations from "@/components/StepperResevation/Step3Congratulations";
+import Congratulations from "@/components/StepperReservation/Step3/Congratulations";
 
 export default {
   name: "StepperReservation",
   components: {
-    Step3Congratulations,
-    Step2UserData,
-    Step1HoursAvailable,
-    Step1CalendarComponent,
+    Congratulations,
+    UserData,
+    HoursAvailable,
+    CalendarComponent,
   },
   data() {
     return {
@@ -73,7 +74,7 @@ export default {
       this.step += 1;
     },
     handleSubmit(time) {
-      this.time = time.time;
+      this.time = time.time
       this.next();
     },
     async onDayClick() {

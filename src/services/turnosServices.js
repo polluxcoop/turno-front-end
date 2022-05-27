@@ -8,5 +8,9 @@ export const turnosServices = {
     async saveTurn(request) {
         console.log(request)
         return axiosConfig().post('/appointments', request).then(response => console.log(response))
+    },
+    async getDates(start, end) {
+        return axiosConfig().get(`/available_slots/${start}/${end}?filters[service_id]=1`)
+            .then(response => response.data)
     }
 }

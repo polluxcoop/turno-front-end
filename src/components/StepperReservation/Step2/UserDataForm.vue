@@ -70,9 +70,7 @@
       </div>
 
       <div class="boton">
-        <button type="button" id="myButton"  @next="$emit('next')">
-          RESERVAR
-        </button>
+        <button type="button" id="myButton"  @click="submitForm">RESERVAR</button>
       </div>
     </form>
   </div>
@@ -83,7 +81,7 @@ import { turnosServices } from "@/services/turnosServices";
 import moment from "moment";
 
 export default {
-  name: "Step2UserDataForm",
+  name: "UserDataForm",
   props: {
     date: String,
     time: String,
@@ -120,12 +118,12 @@ export default {
           confirmed_at: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
         };
         const response = await turnosServices.saveTurn(request);
-
         this.$emit("next");
         console.log(response);
       }
     },
     handleBlur() {
+      
       this.nameAlert = false;
       this.emailAlert = false;
       this.phoneAlert = false;
@@ -252,8 +250,8 @@ p.error {
   padding: 4px 10px;
 }
 .col2 {
- margin-left: 18px;
-    margin-right: 183px;
+  margin-left: 18px;
+  margin-right: 183px;
 }
 </style>
 
