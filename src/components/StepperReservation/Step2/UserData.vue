@@ -1,14 +1,12 @@
 <template>
   <div class="col1">
     <div id="datos">
-      <img id="arrow" src=../../../assets/Arrow.svg alt="arrow"
-      @click="$emit('back')" />
-
+      <img id="arrow" src="../../../assets/Arrow.svg"
+      @click="$emit('back')"/>  
       <h1 id="dato">Datos de la reserva:</h1>
       <p id="time">{{ time }}</p>
       <p id="date">{{ formattedDate }}</p>
     </div>
-
     <UserDataForm :time="time" :date="formattedDate" @next="$emit('next')" />
   </div>
 </template>

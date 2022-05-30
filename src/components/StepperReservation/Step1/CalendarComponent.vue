@@ -1,159 +1,91 @@
 <template>
   <div class="col1">
     <v-date-picker
-      v-model="range"
       :min-date="new Date()"
       :value="value"
       :mode="mode"
-      :disabled-dates="[
-        {
-          start: null,
-          end: new Date(2022, 6, 31),
-        },
-        {
-          start: new Date(2022, 6, 1),
-          end: null,
-        },
-      ]"
+      color="blue"
       title-position="center"
       locale="es"
       :masks="{ input: ['YYYY-MM-DD'] }"
-      :key="calendarKey"
-      :attributes="attrs"
+      :disabled-dates='{ weekdays: [1, 7] }'
+      :attributes="attributes"
       @input="updateValue"
       ref="input"
-      is-range
     />
   </div>
+   <div v-else style="color: white; font-size: 22px">
+        Selecione una fecha del calendario
+      </div>
 </template>
 
 <script>
 import moment from "moment";
-import vModelMixin from "../../../mixins/vModelMixin";
 import { turnosServices } from "@/services/turnosServices";
-// const date = new Date();
-// const year = date.getFullYear();
-// const month = date.getMonth();
 
 export default {
   name: "CalendarComponent",
   props: {
-    // value: {
-    //   type: [Date, String],
-    //   required: true,
-    // },
+    value: {
+      type: [Date, String],
+    },
     mode: {
       type: String,
       default: "single",
     },
-    disabledDates: {
-      type: [Object, Function],
-      default: () => moment("2022-06-02").toDate(),
-    },
   },
-  mixins: [vModelMixin],
   data() {
     return {
-      calendarKey: 0,
-      availableDates: [moment("2022-06-02").toDate()],
-      range: {
-        start: new Date(),
-        end: new Date(),
-      },
-      attrs: [
-        {
-          // highlight: {
-          //   color: "green",
-          //   fillMode: "solid",
-          //   contentClass: "italic",
-          // },
-          // dates: this.availableDates,
-        },
-        //     {
-        //       key: "today",
-        //       highlight: {
-        //         color: "blue",
-        //         fillMode: "solid",
-        //         contentClass: "italic",
-        //       },
-        //       dates: new Date(year, month, 13),
-        //     },
-        //     {
-        //       key: "today",
-        //       highlight: {
-        //         color: "blue",
-        //         fillMode: "solid",
-        //         contentClass: "italic",
-        //       },
-        //       dates: new Date(year, month, 11),
-        //     },
-        //     {
-        //       key: "today",
-        //       highlight: {
-        //         color: "blue",
-        //         fillMode: "solid",
-        //         contentClass: "italic",
-        //       },
-        //       dates: new Date(year, month, 17),
-        //     },
-        //     {
-        //       key: "today",
-        //       highlight: {
-        //         color: "blue",
-        //         fillMode: "solid",
-        //         contentClass: "italic",
-        //       },
-        //       dates: new Date(year, month, 20),
-        //     },
-        //     {
-        //       key: "today",
-        //       highlight: {
-        //         color: "blue",
-        //         fillMode: "solid",
-        //         contentClass: "italic",
-        //       },
-        //       dates: new Date(year, month, 16),
-        //     },
-      ],
+      startDate: null,
+      endDate: null,
+      attributes: [],
+      loading: false,
     };
   },
-  watch: {
-    range(newVal) {
-      const startDate = moment(newVal.start).format("Y-M-D");
-      const endDate = moment(newVal.end).format("Y-M-D");
-      if (startDate !== endDate) {
-        this.onDayClick(startDate, endDate);
-      }
-    },
+  mounted() {
+    this.startDate = moment().startOf("month").format("YYYY-MM-DD");
+    this.endDate = moment().endOf("month").format("YYYY-MM-DD");
+
+    const nextMonthButton = document.querySelector(
+      "body > section > div > section > div > div > div.vc-pane-container > div.vc-arrows-container.title-center > div.vc-arrow.is-right > svg"
+    );
+    const backMonthButton = document.querySelector(
+      "body > section > div > section > div > div > div.vc-pane-container > div.vc-arrows-container.title-center > div.vc-arrow.is-left > svg"
+    );
+    nextMonthButton.addEventListener("click", this.nextMonth);
+    backMonthButton.addEventListener("click", this.backMonth);
+    this.loadAttributes();
   },
   methods: {
-    async onDayClick(startDate, endDate) {
-      // console.log(this.range.start);
-      // console.log(this.range.end);
-      const response = await turnosServices.getDates(startDate, endDate);
-      this.availableDates = response.map((date) => moment(date).toDate());
-      // let attrs = {
-      //   highlight: {
-      //     color: "green",
-      //     fillMode: "solid",
-      //     contentClass: "italic",
-      //   },
-      //   dates: this.availableDates,
-      // };
-      // this.attrs = [attrs];
-      // console.log(this.availableDates);
-      this.attrs = response.map((date) => ({
+    async loadAttributes() {
+      const response = await turnosServices.getAvailableDates(
+        this.startDate,
+        this.endDate
+      );
+      this.attributes = response.map((date) => ({
+        key: date,
         highlight: {
-          color: "green",
+          color: "blue",
           fillMode: "solid",
+          contentClass: "italic",
         },
-        dates: moment(date).toDate(),
+        dates: `${date}T12:00:00Z`,
       }));
-      console.log(response);
-      this.calendarKey++;
     },
+    nextMonth() {
+      this.startDate = moment(this.startDate).add(1, "months");
+      this.endDate = moment(this.endDate).add(1, "months");
+      this.loadAttributes();
+    },
+    backMonth() {
+      this.startDate = moment(this.startDate).subtract(1, "months");
+      this.endDate = moment(this.endDate).subtract(1, "months");
+      this.loadAttributes();
+    },
+    
     updateValue(value) {
       this.$emit("input", value);
+      this.$emit("onDayClick");
     },
   },
 };
@@ -164,10 +96,16 @@ export default {
 .vc-header {
   padding: 10px 0;
 }
-
-.vc-weekday {
-  color: rgb(63, 62, 62) !important;
+.vc-week{
+   color: rgb(20, 19, 19) !important;
 }
+.vc-weekday {
+  color :none !important;
+}
+.vc-arrow  {
+    color: rgb(20, 19, 19) !important;
+}
+
 .vc-day-box-center-center {
   text-align: center !important;
 }
@@ -179,4 +117,5 @@ export default {
   align-items: center;
   font-family: "Lexend Exa";
 }
+
 </style>

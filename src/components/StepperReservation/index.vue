@@ -4,27 +4,14 @@
       <CalendarComponent v-model="selectedDate" @onDayClick="onDayClick" />
       <HoursAvailable
         :available="available"
-        v-if="available.length > 1"
-
         @next="next"
         @submitForm="handleSubmit"
       />
-      <!-- <div
-        v-if="this.selectedDate !== null"
-        style="color: red; text-align: center"
-      >
-        No hay horarios disponibles para la fecha seleccionada
-      </div> -->
     </section>
-
-    <!-- 
-    <div style="color: red; font-size: 18px; text-align: center">
-      {{ errorMessage }}
-    </div> -->
 
     <section style="display: flex" v-if="step === 2">
       <UserData
-        :time="time"
+        :time="time | friendlyTime"
         :formatted-date="formattedDate"
         @back="back"
         @next="next"
@@ -66,6 +53,12 @@ export default {
       errorMessage: "",
     };
   },
+  filters: {
+    friendlyTime: function (value) {
+      if (!value) return "";
+      return value.substring(5, -2);
+    },
+  },
   methods: {
     back() {
       if (this.step > 0) this.step -= 1;
@@ -74,12 +67,12 @@ export default {
       this.step += 1;
     },
     handleSubmit(time) {
-      this.time = time.time
+      this.time = time.time;
       this.next();
     },
     async onDayClick() {
       try {
-        this.formattedDate = moment(this.selectedDate).format("YYYY-MM-DD");
+        this.formattedDate = moment(this.selectedDate).format("DD-MM-YYYY");
         const response = await turnosServices.getAvailableSlots(
           this.formattedDate
         );

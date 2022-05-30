@@ -4,7 +4,6 @@
       <h1 id="title2">
         ¡Completá el formulario <br />para finalizar el proceso!
       </h1>
-
       <div class="form-control">
         <label for="name">Nombre y apellido:</label>
         <input
@@ -13,11 +12,10 @@
           id="name"
           v-model="name"
           @blur="handleBlur"
+          autocomplete="off"
         />
-
         <p class="error" v-if="nameAlert">Falta completar este campo</p>
       </div>
-
       <div class="form-control">
         <label for="email">E-mail:</label>
         <input
@@ -26,36 +24,37 @@
           id="email"
           v-model="email"
           @blur="handleBlur"
+          autocomplete="off"
+          pattern=".+@beststartupever\.com"
         />
         <p class="error" v-if="emailAlert">Falta completar este campo</p>
       </div>
-
       <div class="form-control">
         <label for="phone">Teléfono:</label>
         <input
-          type="text"
+          type="number"
           name="client_cell"
           id="phone"
           required
           v-model="phone"
           @blur="handleBlur"
+          autocomplete="off"
         />
         <p class="error" v-if="phoneAlert">Falta completar este campo</p>
       </div>
-
       <div class="form-control">
         <label for="dni">DNI:</label>
         <input
-          type="text"
+          type="number"
           name="client_dni"
           id="dni"
           required
           v-model="dni"
           @blur="handleBlur"
+          autocomplete="off"
         />
         <p class="error" v-if="dniAlert">Falta completar este campo</p>
       </div>
-
       <div class="form-control">
         <label for="message">Mensaje:</label>
         <textarea
@@ -65,12 +64,14 @@
           v-model="message"
           required
           @blur="handleBlur"
+          autocomplete="off"
         ></textarea>
         <p class="error" v-if="messageAlert">Falta completar este campo</p>
       </div>
-
       <div class="boton">
-        <button type="button" id="myButton"  @click="submitForm">RESERVAR</button>
+        <button type="button" id="myButton" @click="submitForm">
+          RESERVAR
+        </button>
       </div>
     </form>
   </div>
@@ -102,12 +103,12 @@ export default {
   },
 
   methods: {
-    async submitForm() {
+    submitForm() {
       const validacion = this.validateForm();
       if (validacion) {
         const request = {
-          date: this.date,
-          time: this.time,
+          date: moment(this.date, "DD-MM-YYYY").format("YYYY-MM-DD"),
+          time: moment(this.time, "HH:mm").format("HH:mm:ss"),
           client_name: this.name,
           client_email: this.email,
           client_cell: this.phone,
@@ -115,15 +116,15 @@ export default {
           message: this.message,
           service_id: 1,
           terminal_id: 1,
-          confirmed_at: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+          confirmed_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         };
-        const response = await turnosServices.saveTurn(request);
-        this.$emit("next");
-        console.log(response);
+
+        turnosServices.saveTurn(request).then(() => {
+          this.$emit("next");
+        });
       }
     },
     handleBlur() {
-      
       this.nameAlert = false;
       this.emailAlert = false;
       this.phoneAlert = false;
@@ -164,8 +165,8 @@ export default {
 
 <style scoped>
 form {
-  margin-left: 75px !important;
-  margin-right: -96px !important;
+  margin-left: 75px;
+  margin-right: -96px;
 }
 
 #title2 {
@@ -205,11 +206,19 @@ label {
   width: 375px;
   height: 98px;
   background: #ffffff;
+  font-family: "Lexend Exa";
   border-radius: 0px;
   margin-bottom: 10px;
   display: block;
 }
-
+#inputMessage,
+#name,
+#dni,
+#phone,
+#email {
+  font-family: "Lexend Exa";
+  font-size: 15px;
+}
 .boton {
   text-align: center;
   margin-left: 2px;
