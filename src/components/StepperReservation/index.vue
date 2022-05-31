@@ -4,11 +4,11 @@
       <CalendarComponent v-model="selectedDate" @onDayClick="onDayClick" />
       <HoursAvailable
         :available="available"
+        :loading="loading"
         @next="next"
         @submitForm="handleSubmit"
       />
     </section>
-
     <section style="display: flex" v-if="step === 2">
       <UserData
         :time="time | friendlyTime"
@@ -17,7 +17,6 @@
         @next="next"
       />
     </section>
-
     <section style="display: flex" v-if="step === 3">
       <Congratulations />
     </section>
@@ -42,6 +41,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       selectedDate: null,
       day: null,
       step: 1,
@@ -59,9 +59,16 @@ export default {
       return value.substring(5, -2);
     },
   },
+  watch: {
+    loading: function () {
+      if (this.loading) console.log("true");
+      else console.log("false");
+    },
+  },
   methods: {
     back() {
       if (this.step > 0) this.step -= 1;
+      if (this.step === 1) this.available = [];
     },
     next() {
       this.step += 1;
@@ -71,12 +78,15 @@ export default {
       this.next();
     },
     async onDayClick() {
+      this.loading = true;
+      this.available = [];
       try {
         this.formattedDate = moment(this.selectedDate).format("DD-MM-YYYY");
         const response = await turnosServices.getAvailableSlots(
-          this.formattedDate
+         this.formattedDate
         );
         this.available = response;
+        this.loading = false;
       } catch (e) {
         this.errorMessage = `La fecha debe ser igual o posterior al ${moment().format(
           "YYYY-MM-DD"

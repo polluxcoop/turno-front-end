@@ -1,22 +1,27 @@
-<template>
+<template >
   <div class="col1">
     <v-date-picker
+      v-show="!loading"
+      :timezone="timezone"
       :min-date="new Date()"
       :value="value"
       :mode="mode"
-      color="blue"
       title-position="center"
       locale="es"
       :masks="{ input: ['YYYY-MM-DD'] }"
-      :disabled-dates='{ weekdays: [1, 7] }'
+      :disabled-dates="{ weekdays: [1, 7] }"
       :attributes="attributes"
       @input="updateValue"
+      @update:to-page="loadAttributes"
       ref="input"
     />
+    <div
+      v-show="loading"
+      style="color: white; font-size: 22px; align-items: center"
+    >
+      Cargando....
+    </div>
   </div>
-   <div v-else style="color: white; font-size: 22px">
-        Selecione una fecha del calendario
-      </div>
 </template>
 
 <script>
@@ -36,76 +41,65 @@ export default {
   },
   data() {
     return {
-      startDate: null,
-      endDate: null,
       attributes: [],
+      timezone: "America/Buenos_Aires",
       loading: false,
+      selectedMonth: 0,
     };
   },
-  mounted() {
-    this.startDate = moment().startOf("month").format("YYYY-MM-DD");
-    this.endDate = moment().endOf("month").format("YYYY-MM-DD");
 
-    const nextMonthButton = document.querySelector(
-      "body > section > div > section > div > div > div.vc-pane-container > div.vc-arrows-container.title-center > div.vc-arrow.is-right > svg"
-    );
-    const backMonthButton = document.querySelector(
-      "body > section > div > section > div > div > div.vc-pane-container > div.vc-arrows-container.title-center > div.vc-arrow.is-left > svg"
-    );
-    nextMonthButton.addEventListener("click", this.nextMonth);
-    backMonthButton.addEventListener("click", this.backMonth);
-    this.loadAttributes();
-  },
   methods: {
-    async loadAttributes() {
-      const response = await turnosServices.getAvailableDates(
-        this.startDate,
-        this.endDate
-      );
-      this.attributes = response.map((date) => ({
-        key: date,
-        highlight: {
-          color: "blue",
-          fillMode: "solid",
-          contentClass: "italic",
-        },
-        dates: `${date}T12:00:00Z`,
-      }));
+    async loadAttributes(page) {
+      if (page.month !== Number(this.selectedMonth)) {
+        this.loading = true;
+        this.selectedMonth = page.month;
+        const startDate = moment()
+          .month(page.month - 1)
+          .startOf("month")
+          .format("YYYY-MM-DD");
+        const endDate = moment()
+          .month(page.month - 1)
+          .endOf("month")
+          .format("YYYY-MM-DD");
+        const response = await turnosServices.getAvailableDates(
+          startDate,
+          endDate
+        );
+        this.attributes = response.map((date) => ({
+          key: date,
+          highlight: {
+            color: "blue",
+            fillMode: "solid",
+            contentClass: "italic",
+          },
+          dates: `${date}T12:00:00Z`,
+        }));
+        this.loading = false;
+      }
     },
-    nextMonth() {
-      this.startDate = moment(this.startDate).add(1, "months");
-      this.endDate = moment(this.endDate).add(1, "months");
-      this.loadAttributes();
-    },
-    backMonth() {
-      this.startDate = moment(this.startDate).subtract(1, "months");
-      this.endDate = moment(this.endDate).subtract(1, "months");
-      this.loadAttributes();
-    },
-    
     updateValue(value) {
-      this.$emit("input", value);
-      this.$emit("onDayClick");
+      if (value) {
+        this.$emit("input", value);
+        this.$emit("onDayClick");
+      }
     },
   },
 };
 </script>
 
-
 <style scoped>
 .vc-header {
   padding: 10px 0;
 }
-.vc-week{
-   color: rgb(20, 19, 19) !important;
+.vc-week {
+  color: rgb(20, 19, 19) !important;
 }
 .vc-weekday {
-  color :none !important;
+  color: none !important;
 }
-.vc-arrow  {
-    color: rgb(20, 19, 19) !important;
+.vc-arrow {
+  color: rgb(20, 19, 19) !important;
 }
-
 .vc-day-box-center-center {
   text-align: center !important;
 }
@@ -117,5 +111,4 @@ export default {
   align-items: center;
   font-family: "Lexend Exa";
 }
-
 </style>

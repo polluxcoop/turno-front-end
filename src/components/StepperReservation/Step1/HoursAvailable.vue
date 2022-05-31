@@ -5,7 +5,7 @@
       <p>Mariana Martinez</p>
     </div>
     <div class="col">
-      <template v-if="available.length > 1">
+      <div class="col1" v-if="available.length > 1">
         <BaseButton
           v-for="time in available"
           :key="time"
@@ -13,9 +13,15 @@
           :value="time"
           @click="submitForm(time)"
         />
-      </template>
-      <div v-else style="color: white; font-size: 22px">
-        Selecione una fecha del calendario
+      </div>
+      <div v-show="loading === true" style="color: white; font-size: 22px">
+        Cargando...
+      </div>
+      <div
+        v-show="available.length <= 1 && loading === false"
+        style="color: white; font-size: 22px"
+      >
+        Seleccione una fecha
       </div>
     </div>
   </div>
@@ -31,6 +37,10 @@ export default {
     available: {
       required: true,
       type: Array,
+    },
+    loading: {
+      required: true,
+      type: Boolean,
     },
   },
 
@@ -70,7 +80,6 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .col {
   flex-flow: wrap column;
@@ -78,7 +87,9 @@ export default {
   align-items: center;
   justify-content: center;
 }
-
+.col1 {
+  margin-left: 53px;
+}
 .col-2 {
   height: 97vh;
 }
@@ -106,7 +117,7 @@ p {
 button {
   border-style: none;
   width: 177px;
-  height: 37px;
+  height: 33px;
   background: rgba(72, 183, 185, 0.5);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 0px;
@@ -123,7 +134,6 @@ button {
   margin: 10px;
   overflow: visible;
 }
-
 button:hover {
   box-shadow: 0 5px 10px 0 #6eb4fa;
   transition: 0.3s;

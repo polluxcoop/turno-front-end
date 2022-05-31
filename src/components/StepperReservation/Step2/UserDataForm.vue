@@ -118,7 +118,6 @@ export default {
           terminal_id: 1,
           confirmed_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         };
-
         turnosServices.saveTurn(request).then(() => {
           this.$emit("next");
         });
@@ -181,7 +180,6 @@ form {
   background: none;
   box-shadow: none;
 }
-
 input {
   width: 375px;
   height: 48px;
@@ -190,18 +188,14 @@ input {
   display: block;
   margin-bottom: 5px;
 }
-
 label {
   font-family: "Lexend Exa";
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
   line-height: 27px;
-
-  display: block;
   color: #ffffff;
 }
-
 #inputMessage {
   width: 375px;
   height: 98px;
@@ -223,7 +217,6 @@ label {
   text-align: center;
   margin-left: 2px;
 }
-
 button {
   width: 171px;
   height: 48px;
@@ -241,12 +234,10 @@ button {
   color: #ffffff;
   margin-left: -7px;
 }
-
 button:hover {
   box-shadow: 0 5px 10px 0 #6eb4fa;
   transition: 0.3s;
 }
-
 p.error {
   background: white;
   border-radius: 10px;

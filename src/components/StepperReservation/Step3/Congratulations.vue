@@ -20,7 +20,6 @@ section {
 .title {
   width: 335px;
   height: 59px;
-
   font-family: "Lexend Exa";
   font-style: normal;
   font-weight: bolder;
@@ -37,7 +36,6 @@ section {
   align-items: center;
   font-family: "Lexend Exa";
 }
-
 .col2 img {
   width: 591px;
   align-items: center;

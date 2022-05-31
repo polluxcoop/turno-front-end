@@ -37,7 +37,6 @@ section {
   align-items: center;
   font-family: "Lexend Exa";
 }
-
 .col2 img {
   width: 591px;
   align-items: center;

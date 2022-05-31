@@ -10,7 +10,12 @@ export default {
   components: {},
 };
 </script>
+
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+}
 section {
   overflow: hidden;
   background-repeat: no-repeat;
